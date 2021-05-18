@@ -2,7 +2,9 @@ package io.keepcoding.eh_ho.login
 
 import android.util.Patterns
 import androidx.lifecycle.*
+import io.keepcoding.eh_ho.R
 import io.keepcoding.eh_ho.model.LogIn
+import io.keepcoding.eh_ho.model.LogUp
 import io.keepcoding.eh_ho.repository.Repository
 import java.util.regex.Pattern
 
@@ -15,6 +17,8 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
 
     private val _state: MutableLiveData<State> =
         MutableLiveData<State>().apply { postValue(State.SignIn) }
+
+    private val _mesagge: MutableLiveData<Int> = MutableLiveData<Int>()
 
     private val _signInData = MutableLiveData<SignInData>().apply { postValue(SignInData("", "")) }
     private val _signInValidationError =
@@ -37,6 +41,7 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         Transformations.map(_signInData) { it?.isValid() ?: false }
     val signUpEnabled: LiveData<Boolean> =
         Transformations.map(_signUpData) { it?.isValid() ?: false }
+    val message: LiveData<Int> = _mesagge
     val loading: LiveData<Boolean> = Transformations.map(_state) {
         when (it) {
             State.SignIn,
@@ -47,6 +52,7 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
             State.SigningUp -> true
         }
     }
+
 
     fun onNewSignInUserName(userName: String) {
         onNewSignInData(_signInData.value?.copy(userName = userName))
@@ -91,11 +97,13 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
     fun signIn() {
         signInData.value?.takeIf { it.isValid() }?.let {
             if (isSignInDataValid(it)) {
+                _state.postValue(State.SigningIn)
                 repository.signIn(it.userName, it.password) { it ->
                     if (it is LogIn.Success) {
                         _state.postValue(State.SignedIn)
                     } else {
-                        //
+                        _state.postValue(State.SignIn)
+                        _mesagge.postValue(R.string.incorrect_username_or_password)
                     }
                 }
             }
@@ -117,8 +125,15 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
     fun signUp() {
         signUpData.value?.takeIf { it.isValid() }?.let {
             if (isSignUpDataValid(it)) {
+                _state.postValue(State.SigningUp)
                 repository.signup(it.userName, it.email, it.password) {
-                    //
+                    if (it is LogUp.Success) {
+                        _state.postValue(State.SignIn)
+                        _mesagge.postValue(R.string.please_log_in_message)
+                    } else {
+                        _state.postValue(State.SignUp)
+                        _mesagge.postValue(R.string.error_signing_up)
+                    }
                 }
             }
         }

@@ -1,6 +1,7 @@
 package io.keepcoding.eh_ho.repository
 
 import io.keepcoding.eh_ho.model.LogIn
+import io.keepcoding.eh_ho.model.LogUp
 import io.keepcoding.eh_ho.model.Topic
 import io.keepcoding.eh_ho.network.Client
 
@@ -23,7 +24,7 @@ class Repository(private val client: Client) {
 		username: String,
 		email: String,
 		password: String,
-		callback: Callback<LogIn>,
+		callback: Callback<LogUp>,
 	) {
 		client.signUp(username, email, password) {
 			callback.onResult(it)

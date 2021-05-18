@@ -2,6 +2,7 @@ package io.keepcoding.eh_ho.login
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -31,7 +32,12 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         vm.loading.observe(this) {
+            binding.fragmentContainer.isVisible = !it
             binding.viewLoading.root.isVisible = it
+        }
+
+        vm.message.observe(this) {
+            Toast.makeText(this, getString(it), Toast.LENGTH_LONG).show()
         }
     }
 

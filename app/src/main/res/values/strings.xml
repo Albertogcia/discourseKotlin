@@ -13,4 +13,7 @@
     <string name="username_invalid_error">The username must have more than 8 alphanumeric characters</string>
     <string name="email_invalid_error">The email has an invalid format</string>
     <string name="password_invalid_error">The password must have more than 8 characters and at least one number and one symbol</string>
+    <string name="incorrect_username_or_password">Incorrect username or password</string>
+    <string name="error_signing_up">There was an error singning up please try again</string>
+    <string name="please_log_in_message">Please, log in</string>
 </resources>

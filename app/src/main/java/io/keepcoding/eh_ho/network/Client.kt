@@ -1,6 +1,7 @@
 package io.keepcoding.eh_ho.network
 
 import io.keepcoding.eh_ho.model.LogIn
+import io.keepcoding.eh_ho.model.LogUp
 import io.keepcoding.eh_ho.model.Topic
 import okhttp3.*
 import java.io.IOException
@@ -28,7 +29,7 @@ class Client(
             username: String,
             email: String,
             password: String,
-            callback: Callback<LogIn>,
+            callback: Callback<LogUp>,
     ) {
         runRequest(
                 requestBuilder.signUpRequest(username, email, password),

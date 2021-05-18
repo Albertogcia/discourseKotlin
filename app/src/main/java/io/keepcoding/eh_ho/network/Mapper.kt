@@ -1,6 +1,7 @@
 package io.keepcoding.eh_ho.network
 
 import io.keepcoding.eh_ho.model.LogIn
+import io.keepcoding.eh_ho.model.LogUp
 import io.keepcoding.eh_ho.model.Topic
 import okhttp3.Response
 import org.json.JSONArray
@@ -13,11 +14,11 @@ fun Response.toSignInModel(): LogIn = when (this.isSuccessful) {
 }
 fun IOException.toSignInModel(): LogIn = LogIn.Error(this.toString())
 
-fun Response.toSignUpModel(): LogIn = when (this.isSuccessful) {
-    true -> LogIn.Success(JSONObject(this.body?.string()).getJSONObject("user").getString("username"))
-    false -> LogIn.Error(this.body?.string() ?: "Some Error parsing response")
+fun Response.toSignUpModel(): LogUp = when (this.isSuccessful) {
+    true -> LogUp.Success(JSONObject(this.body?.string()).getString("message"))
+    false -> LogUp.Error(JSONObject(this.body?.string()).getString("message"))
 }
-fun IOException.toSignUpModel(): LogIn = LogIn.Error(this.toString())
+fun IOException.toSignUpModel(): LogUp = LogUp.Error(this.toString())
 
 fun Response.toTopicsModel(): Result<List<Topic>> = when (this.isSuccessful) {
     true -> Result.success(parseTopics(body?.string())).also { println("JcLog: BackendResult -> $it") }
