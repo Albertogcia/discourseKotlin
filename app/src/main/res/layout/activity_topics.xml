@@ -14,13 +14,19 @@
     android:orientation="vertical"
     tools:context=".login.LoginActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/topics"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/view_topic"
-        />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/topics"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/view_topic" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <include
         android:id="@+id/viewLoading"
@@ -33,6 +39,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/no_topics_message"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </FrameLayout>

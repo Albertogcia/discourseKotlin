@@ -18,6 +18,7 @@ class TopicsViewModel(private val repository: Repository) : ViewModel() {
     fun loadTopics() {
         _state.postValue(
             if (_state.value == null) {
+                getTopics()
                 State.LoadingTopics.Loading
             } else {
                 with(_state.value) {
@@ -29,6 +30,9 @@ class TopicsViewModel(private val repository: Repository) : ViewModel() {
                 }
             }
         )
+    }
+
+    fun getTopics(){
         repository.getTopics {
             it.fold(::onTopicsReceived, ::onTopicsFailure)
         }

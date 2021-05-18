@@ -37,6 +37,10 @@ class TopicsActivity : AppCompatActivity() {
                 is TopicsViewModel.State.NoTopics -> renderEmptyState()
             }
         }
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            vm.getTopics()
+        }
     }
 
     override fun onResume() {
@@ -44,7 +48,10 @@ class TopicsActivity : AppCompatActivity() {
         vm.loadTopics()
     }
 
-    private fun addTopics(topics: List<Topic>){
+    private fun addTopics(topics: List<Topic>) {
+        if (binding.swipeRefreshLayout.isRefreshing) {
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
         binding.viewLoading.root.isVisible = false
         binding.noTopicsTextView.isVisible = false
         topicsAdapter.submitList(topics)
