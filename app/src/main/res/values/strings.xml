@@ -9,4 +9,8 @@
     <string name="label_login">Login</string>
     <string name="label_create_new_account">Create new account</string>
     <string name="label_loading">Loading</string>
+    <!-- Error Messages -->
+    <string name="username_invalid_error">The username must have more than 8 alphanumeric characters</string>
+    <string name="email_invalid_error">The email has an invalid format</string>
+    <string name="password_invalid_error">The password must have more than 8 characters and at least one number and one symbol</string>
 </resources>

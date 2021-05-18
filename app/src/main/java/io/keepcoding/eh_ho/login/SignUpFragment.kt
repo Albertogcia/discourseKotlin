@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import io.keepcoding.eh_ho.R
 import io.keepcoding.eh_ho.common.TextChangedWatcher
 import io.keepcoding.eh_ho.databinding.FragmentSignUpBinding
 
@@ -38,6 +39,20 @@ class SignUpFragment : Fragment() {
                 setText(it.confirmPassword)
                 setSelection(it.confirmPassword.length)
             }
+        }
+        vm.signUpValidationError.observe(viewLifecycleOwner) {
+            if(!it.isUsernameValid){
+                inputUsername.error = getString(R.string.username_invalid_error)
+            }else inputUsername.error = null
+
+            if(!it.isPasswordValid){
+                inputPassword.error = getString(R.string.password_invalid_error)
+            }else inputPassword.error = null
+
+            if(!it.isEmailValid){
+                inputEmail.error = getString(R.string.email_invalid_error)
+            }
+            else inputEmail.error = null
         }
         vm.signUpEnabled.observe(viewLifecycleOwner) {
             buttonSignUp.isEnabled = it

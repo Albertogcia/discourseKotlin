@@ -1,19 +1,42 @@
 package io.keepcoding.eh_ho.login
 
+import android.util.Patterns
 import androidx.lifecycle.*
 import io.keepcoding.eh_ho.model.LogIn
 import io.keepcoding.eh_ho.repository.Repository
+import java.util.regex.Pattern
 
 class LoginViewModel(private val repository: Repository) : ViewModel() {
 
-    private val _state: MutableLiveData<State> = MutableLiveData<State>().apply { postValue(State.SignIn) }
+    private val emailPattern: Pattern = Patterns.EMAIL_ADDRESS
+    private val usernamePattern: Pattern = Regex("[a-zA-Z0-9]{5,}").toPattern()
+    private val passwordPattern: Pattern =
+        Regex("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@\$!¡%*#¿?&])[A-Za-z\\d@\$!¡%*#¿?&]{8,}\$").toPattern()
+
+    private val _state: MutableLiveData<State> =
+        MutableLiveData<State>().apply { postValue(State.SignIn) }
+
     private val _signInData = MutableLiveData<SignInData>().apply { postValue(SignInData("", "")) }
-    private val _signUpData = MutableLiveData<SignUpData>().apply { postValue(SignUpData("", "", "", "")) }
+    private val _signInValidationError =
+        MutableLiveData<SignInValidationError>().apply { postValue(SignInValidationError()) }
+
+    private val _signUpData =
+        MutableLiveData<SignUpData>().apply { postValue(SignUpData("", "", "", "")) }
+    private val _signUpValidationError =
+        MutableLiveData<SignUpValidationError>().apply { postValue(SignUpValidationError()) }
+
     val state: LiveData<State> = _state
+
     val signInData: LiveData<SignInData> = _signInData
+    val signInValidationError: LiveData<SignInValidationError> = _signInValidationError
+
     val signUpData: LiveData<SignUpData> = _signUpData
-    val signInEnabled: LiveData<Boolean> = Transformations.map(_signInData) { it?.isValid() ?: false }
-    val signUpEnabled: LiveData<Boolean> = Transformations.map(_signUpData) { it?.isValid() ?: false }
+    val signUpValidationError: LiveData<SignUpValidationError> = _signUpValidationError
+
+    val signInEnabled: LiveData<Boolean> =
+        Transformations.map(_signInData) { it?.isValid() ?: false }
+    val signUpEnabled: LiveData<Boolean> =
+        Transformations.map(_signUpData) { it?.isValid() ?: false }
     val loading: LiveData<Boolean> = Transformations.map(_state) {
         when (it) {
             State.SignIn,
@@ -67,21 +90,50 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
 
     fun signIn() {
         signInData.value?.takeIf { it.isValid() }?.let {
-            repository.signIn(it.userName, it.password) {
-                if (it is LogIn.Success) {
-                    _state.postValue(State.SignedIn)
-                } else {
+            if (isSignInDataValid(it)) {
+                repository.signIn(it.userName, it.password) { it ->
+                    if (it is LogIn.Success) {
+                        _state.postValue(State.SignedIn)
+                    } else {
+                        //
+                    }
+                }
+            }
+        }
+    }
+
+    private fun isSignInDataValid(signInData: SignInData): Boolean {
+        val validationError = SignInValidationError()
+        with(signInData) {
+            validationError.isUsernameValid = usernamePattern.matcher(userName).matches()
+            validationError.isPasswordValid = passwordPattern.matcher(password).matches()
+        }
+        _signInValidationError.postValue(validationError)
+        with(validationError) {
+            return isUsernameValid && isPasswordValid
+        }
+    }
+
+    fun signUp() {
+        signUpData.value?.takeIf { it.isValid() }?.let {
+            if (isSignUpDataValid(it)) {
+                repository.signup(it.userName, it.email, it.password) {
                     //
                 }
             }
         }
     }
 
-    fun signUp() {
-        signUpData.value?.takeIf { it.isValid() }?.let {
-            repository.signup(it.userName, it.email, it.password) {
-                //
-            }
+    private fun isSignUpDataValid(signUpData: SignUpData): Boolean {
+        val validationError = SignUpValidationError()
+        with(signUpData) {
+            validationError.isEmailValid = emailPattern.matcher(email).matches()
+            validationError.isUsernameValid = usernamePattern.matcher(userName).matches()
+            validationError.isPasswordValid = passwordPattern.matcher(password).matches()
+        }
+        _signUpValidationError.postValue(validationError)
+        with(validationError) {
+            return isEmailValid && isUsernameValid && isPasswordValid
         }
     }
 
@@ -99,6 +151,11 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         val password: String,
     )
 
+    data class SignInValidationError(
+        var isUsernameValid: Boolean = true,
+        var isPasswordValid: Boolean = true
+    )
+
     data class SignUpData(
         val email: String,
         val userName: String,
@@ -106,7 +163,14 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         val confirmPassword: String,
     )
 
-    class LoginViewModelProviderFactory(private val repository: Repository) : ViewModelProvider.Factory {
+    data class SignUpValidationError(
+        var isEmailValid: Boolean = true,
+        var isUsernameValid: Boolean = true,
+        var isPasswordValid: Boolean = true
+    )
+
+    class LoginViewModelProviderFactory(private val repository: Repository) :
+        ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T = when (modelClass) {
             LoginViewModel::class.java -> LoginViewModel(repository) as T
             else -> throw IllegalArgumentException("LoginViewModelFactory can only create instances of the LoginViewModel")
@@ -114,8 +178,9 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
     }
 }
 
+private fun LoginViewModel.SignInData.isValid(): Boolean =
+    userName.isNotBlank() && password.isNotBlank()
 
-private fun LoginViewModel.SignInData.isValid(): Boolean = userName.isNotBlank() && password.isNotBlank()
 private fun LoginViewModel.SignUpData.isValid(): Boolean = userName.isNotBlank() &&
         email.isNotBlank() &&
         password == confirmPassword &&
