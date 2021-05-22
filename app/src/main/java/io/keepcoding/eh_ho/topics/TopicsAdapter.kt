@@ -9,9 +9,7 @@ import io.keepcoding.eh_ho.databinding.ViewTopicBinding
 import io.keepcoding.eh_ho.extensions.inflater
 import io.keepcoding.eh_ho.model.Topic
 
-//diffUtilItemCallback: DiffUtil.ItemCallback<Topic> = DIFF
-
-class TopicsAdapter(private val viewHolderFactory: TopicsViewHolderFactory) :
+class TopicsAdapter(private val viewHolderFactory: TopicsViewHolderFactory, private val onClickListener: (Topic) -> Unit) :
     ListAdapter<Topic, TopicsAdapter.TopicModelViewHolder>(DIFF) {
 
     override fun getItemViewType(position: Int): Int =
@@ -20,8 +18,12 @@ class TopicsAdapter(private val viewHolderFactory: TopicsViewHolderFactory) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicModelViewHolder =
         viewHolderFactory.getViewHolder(parent, viewType)
 
-    override fun onBindViewHolder(holder: TopicModelViewHolder, position: Int) =
+    override fun onBindViewHolder(holder: TopicModelViewHolder, position: Int){
+        holder.itemView.setOnClickListener {
+            onClickListener(currentList[position])
+        }
         holder.bind(getItem(position))
+    }
 
     override fun getItemCount(): Int = currentList.size
 

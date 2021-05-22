@@ -2,7 +2,9 @@ package io.keepcoding.eh_ho.network
 
 import io.keepcoding.eh_ho.model.LogIn
 import io.keepcoding.eh_ho.model.LogUp
+import io.keepcoding.eh_ho.model.Post
 import io.keepcoding.eh_ho.model.Topic
+import io.keepcoding.eh_ho.repository.Repository
 import okhttp3.*
 import java.io.IOException
 
@@ -45,6 +47,15 @@ class Client(
             { callback.onResponse(it) },
             IOException::toTopicsModel,
             Response::toTopicsModel,
+        )
+    }
+
+    fun getPosts(topicId: Int, callback: Callback<Result<List<Post>>>) {
+        runRequest(
+            requestBuilder.getTopicPostsRequest(topicId),
+            { callback.onResponse(it) },
+            IOException::toPostsModel,
+            Response::toPostsModel
         )
     }
 

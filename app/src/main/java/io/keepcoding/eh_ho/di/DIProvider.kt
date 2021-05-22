@@ -4,6 +4,7 @@ import android.content.Context
 import io.keepcoding.eh_ho.login.LoginViewModel
 import io.keepcoding.eh_ho.network.Client
 import io.keepcoding.eh_ho.repository.Repository
+import io.keepcoding.eh_ho.topicDetails.TopicDetailsViewModel
 import io.keepcoding.eh_ho.topics.TopicsViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -22,6 +23,10 @@ object DIProvider {
     private val repository: Repository by lazy { Repository(client) }
     val loginViewModelProviderFactory: LoginViewModel.LoginViewModelProviderFactory by lazy { LoginViewModel.LoginViewModelProviderFactory(repository) }
     val topicsViewModelProviderFactory: TopicsViewModel.TopicsViewModelProviderFactory by lazy { TopicsViewModel.TopicsViewModelProviderFactory(repository) }
+
+    fun getTopicDetailsModelProviderFactory(topicId: Int): TopicDetailsViewModel.TopicDetailsViewModelProviderFactory{
+        return TopicDetailsViewModel.TopicDetailsViewModelProviderFactory(repository, topicId)
+    }
 
     fun init(context: Context) {
 

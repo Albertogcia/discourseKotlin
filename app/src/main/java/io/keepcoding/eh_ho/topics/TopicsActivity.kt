@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import io.keepcoding.eh_ho.databinding.ActivityTopicsBinding
 import io.keepcoding.eh_ho.di.DIProvider
 import io.keepcoding.eh_ho.model.Topic
+import io.keepcoding.eh_ho.topicDetails.TopicDetailsActivity
 
 class TopicsActivity : AppCompatActivity() {
 
@@ -22,7 +23,7 @@ class TopicsActivity : AppCompatActivity() {
     }
 
     private val factory: TopicsViewHolderFactory by lazy { TopicsViewHolderFactory() }
-    private val topicsAdapter: TopicsAdapter by lazy { TopicsAdapter(factory) }
+    private val topicsAdapter: TopicsAdapter by lazy { TopicsAdapter(factory, this::navigateToTopicDetails) }
 
     private val vm: TopicsViewModel by viewModels { DIProvider.topicsViewModelProviderFactory }
 
@@ -58,6 +59,10 @@ class TopicsActivity : AppCompatActivity() {
         binding.viewLoading.root.isVisible = false
         binding.noTopicsTextView.isVisible = false
         topicsAdapter.submitList(topics)
+    }
+
+    private fun navigateToTopicDetails(topic: Topic){
+        startActivity(TopicDetailsActivity.createIntent(this, topic.id))
     }
 
     private fun renderEmptyState() {

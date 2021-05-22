@@ -19,6 +19,8 @@
     <string name="label_create_new_account">Create new account</string>
     <string name="label_loading">Loading</string>
     <string name="no_topics_message">There aren\'t any topics</string>
+    <!-- ActivityDetails -->
+    <string name="no_posts_message">There aren\'t any posts</string>
     <!-- Error Messages -->
     <string name="username_invalid_error">The username must have more than 8 alphanumeric characters</string>
     <string name="email_invalid_error">The email has an invalid format</string>
