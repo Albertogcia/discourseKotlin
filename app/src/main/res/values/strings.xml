@@ -1,4 +1,13 @@
 <resources>
+    <!-- Dummy text -->
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Vivamus ligula purus, facilisis at gravida non, mattis quis tortor.
+        Nam vehicula lectus nec dui commodo, et suscipit odio vestibulum.
+        Vivamus vehicula sed lacus eu maximus. Nullam molestie vulputate nunc, non auctor enim
+        tincidunt vitae. Donec convallis consequat dolor. Integer facilisis ut arcu ut euismod.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque dui nisl, imperdiet
+        nec purus at, sollicitudin sodales lectus.</string>
+    <!-- -->
     <string name="app_name">Eh-Ho</string>
     <string name="hint_username">Username</string>
     <string name="hint_password">Password</string>

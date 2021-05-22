@@ -1,5 +1,6 @@
 package io.keepcoding.eh_ho.topics
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -8,33 +9,38 @@ import io.keepcoding.eh_ho.databinding.ViewTopicBinding
 import io.keepcoding.eh_ho.extensions.inflater
 import io.keepcoding.eh_ho.model.Topic
 
-class TopicsAdapter(diffUtilItemCallback: DiffUtil.ItemCallback<Topic> = DIFF) :
-    ListAdapter<Topic, TopicsAdapter.TopicViewHolder>(diffUtilItemCallback) {
+//diffUtilItemCallback: DiffUtil.ItemCallback<Topic> = DIFF
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicViewHolder =
-        TopicViewHolder(parent)
+class TopicsAdapter(private val viewHolderFactory: TopicsViewHolderFactory) :
+    ListAdapter<Topic, TopicsAdapter.TopicModelViewHolder>(DIFF) {
 
-    override fun onBindViewHolder(holder: TopicViewHolder, position: Int) =
+    override fun getItemViewType(position: Int): Int =
+        viewHolderFactory.getItemViewType(getItem(position))
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicModelViewHolder =
+        viewHolderFactory.getViewHolder(parent, viewType)
+
+    override fun onBindViewHolder(holder: TopicModelViewHolder, position: Int) =
         holder.bind(getItem(position))
+
+    override fun getItemCount(): Int = currentList.size
+
+    interface TopicViewHolderFactory {
+        fun getItemViewType(topic: Topic): Int
+        fun getViewHolder(parent: ViewGroup, type: Int): TopicModelViewHolder
+    }
+
+    abstract class TopicModelViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        abstract fun bind(model: Topic)
+    }
 
     companion object {
         val DIFF = object : DiffUtil.ItemCallback<Topic>() {
-            override fun areItemsTheSame(oldItem: Topic, newItem: Topic): Boolean = oldItem.id == newItem.id
-            override fun areContentsTheSame(oldItem: Topic, newItem: Topic): Boolean = oldItem == newItem
-        }
-    }
+            override fun areItemsTheSame(oldItem: Topic, newItem: Topic): Boolean =
+                oldItem.id == newItem.id
 
-    class TopicViewHolder(
-        parent: ViewGroup,
-        private val binding: ViewTopicBinding = ViewTopicBinding.inflate(
-            parent.inflater,
-            parent,
-            false
-        )
-    ) : RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(topic: Topic) {
-            binding.title.text = topic.title
+            override fun areContentsTheSame(oldItem: Topic, newItem: Topic): Boolean =
+                oldItem == newItem
         }
     }
 }

@@ -15,4 +15,10 @@ sealed class LogUp{
 data class Topic(
     val id: Int,
     val title: String,
+    val excerpt: String?,
+    val pinned: Boolean,
+    val lastPosterUsername: String,
+    val postCount: Int,
+    val likeCount: Int
+
 )

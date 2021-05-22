@@ -20,7 +20,10 @@ class TopicsActivity : AppCompatActivity() {
             layoutInflater
         )
     }
-    private val topicsAdapter = TopicsAdapter()
+
+    private val factory: TopicsViewHolderFactory by lazy { TopicsViewHolderFactory() }
+    private val topicsAdapter: TopicsAdapter by lazy { TopicsAdapter(factory) }
+
     private val vm: TopicsViewModel by viewModels { DIProvider.topicsViewModelProviderFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
