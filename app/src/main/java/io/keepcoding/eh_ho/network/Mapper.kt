@@ -41,6 +41,13 @@ fun Response.toPostsModel(): Result<List<Post>> = when (this.isSuccessful) {
 
 fun IOException.toPostsModel(): Result<List<Post>> = Result.failure(this)
 
+fun Response.toNewPostResponseModel(): Result<Boolean> = when (this.isSuccessful) {
+    true -> Result.success(true)
+    false -> Result.failure(IOException(this.body?.string() ?: "Parse error"))
+}
+
+fun IOException.toNewPostResponseModel(): Result<Boolean> = Result.failure(this)
+
 fun parseTopics(json: String?): List<Topic> = json?.let {
     val topicsJsonArray: JSONArray =
         JSONObject(it).getJSONObject("topic_list").getJSONArray("topics")

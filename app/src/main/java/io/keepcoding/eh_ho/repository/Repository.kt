@@ -44,6 +44,12 @@ class Repository(private val client: Client) {
         }
     }
 
+    fun createPost(topicId: Int, text: String, callback: Callback<Result<Boolean>>){
+        client.createPost(topicId, text, userName) {
+            callback.onResult(it)
+        }
+    }
+
     private fun storeLogIn(logIn: LogIn) {
         userName = (logIn as? LogIn.Success)?.userName ?: userName
     }

@@ -59,6 +59,15 @@ class Client(
         )
     }
 
+    fun createPost(topicId: Int, text: String, username: String, callback: Callback<Result<Boolean>>){
+        runRequest(
+            requestBuilder.newPostRequest(topicId, text, username),
+            { callback.onResponse(it) },
+            IOException::toNewPostResponseModel,
+            Response::toNewPostResponseModel
+        )
+    }
+
     private fun <T> runRequest(
             request: Request,
             callback: Callback<T>,

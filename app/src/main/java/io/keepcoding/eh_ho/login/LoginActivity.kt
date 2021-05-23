@@ -23,7 +23,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
         vm.state.observe(this) {
             when (it) {
-                is LoginViewModel.State.SignIn -> navigateToTopics()//moveTo(signInFragment)
+                is LoginViewModel.State.SignIn -> moveTo(signInFragment)
                 is LoginViewModel.State.SigningIn -> { }
                 is LoginViewModel.State.SignedIn -> navigateToTopics()
                 is LoginViewModel.State.SignUp -> moveTo(signUpFragment)

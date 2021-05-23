@@ -11,6 +11,7 @@
     <string name="app_name">Eh-Ho</string>
     <string name="hint_username">Username</string>
     <string name="hint_password">Password</string>
+    <string name="hint_type_here">Type here</string>
     <string name="label_sign_in">Sign in</string>
     <string name="hint_email">Email</string>
     <string name="hint_confirm_password">Confirm password</string>
@@ -19,8 +20,14 @@
     <string name="label_create_new_account">Create new account</string>
     <string name="label_loading">Loading</string>
     <string name="no_topics_message">There aren\'t any topics</string>
+    <string name="cancel_button">Cancel</string>
     <!-- ActivityDetails -->
     <string name="no_posts_message">There aren\'t any posts</string>
+    <string name="new_post_dialog_title">New post</string>
+    <string name="create_post_button">Create post</string>
+    <string name="empty_post_text_error">The post message can\'t be empty</string>
+    <string name="post_text_too_short">The post text should be at least 20 characters</string>
+    <string name="create_post_error">Couldn\'t create the post, please try it again</string>
     <!-- Error Messages -->
     <string name="username_invalid_error">The username must have more than 8 alphanumeric characters</string>
     <string name="email_invalid_error">The email has an invalid format</string>
